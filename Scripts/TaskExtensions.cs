@@ -1,4 +1,4 @@
-﻿using UnityParseHelpers;
+using UnityParseHelpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -302,29 +302,32 @@ public static class TaskExtensions
         });
     }
 
-    public static void Then<TResult>(this Task<TResult> task, Action<TResult> successHandler, Action<Exception> exceptionHandler)
+    public static void Then<TResult>(this Task<TResult> task, Action<TResult> successHandler, Action<Exception> exceptionHandler, Action finalAction = null)
     {
         Action<Task<TResult>> a = t =>
         {
-            if (t.IsCanceled || !t.IsFaulted || exceptionHandler == null)
-            {
-                try { successHandler(t.Result); }
-                catch (Exception e)
-                {
+            if (t.IsCanceled || !t.IsFaulted || exceptionHandler == null) {
+                try { successHandler(t.Result); } catch (Exception e) {
                     Debug.LogException(e);
                     exceptionHandler(e);
                 }
-            }
-            else
-            {
+            } else {
                 var innerException = t.Exception.Flatten().InnerExceptions.FirstOrDefault();
                 exceptionHandler(innerException ?? t.Exception);
+            }
+
+            if (finalAction != null) {
+                try {  // otherwise would fail silently bc this is in a ContinueWith()
+                    finalAction();
+                } catch (Exception e) {
+                    Debug.LogException(e);
+                }
             }
         };
         task.ContinueWith(a);
     }
 
-    public static void Then(this Task task, Action successHandler, Action<Exception> exceptionHandler)
+    public static void Then(this Task task, Action successHandler, Action<Exception> exceptionHandler, Action finalAction = null)
     {
         Action<Task> a = t =>
         {
@@ -342,10 +345,17 @@ public static class TaskExtensions
                 var innerException = t.Exception.Flatten().InnerExceptions.FirstOrDefault();
                 exceptionHandler(innerException ?? t.Exception);
             }
+
+            if (finalAction != null) {
+                try {  // otherwise would fail silently bc this is in a ContinueWith()
+                    finalAction();
+                } catch (Exception e) {
+                    Debug.LogException(e);
+                }
+            }
         };
         task.ContinueWith(a);
     }
-
 
     public static Task<T> OnMainThread<T>(this Task<T> task)
     { 
