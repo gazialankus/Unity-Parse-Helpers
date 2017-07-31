@@ -3,7 +3,7 @@ Unity-Thenable-Tasks
 
 This library is based on [Unity-Parse-Helpers][1]. 
 
-Since Firebase uses [Parse's Unity Tasks library](https://github.com/parse-community/Parse-SDK-dotNET/tree/master/Unity.Tasks), I found [Unity-Parse-Helpers][1] to be useful. However, it also has other Parse-related things that we don't need in Firebase and that prevent compilation without Parse, I created this repo to host only the task-related parts of [Unity-Parse-Helpers][1]. 
+Since Firebase uses [Parse's Unity Tasks library](https://github.com/parse-community/Parse-SDK-dotNET/tree/master/Unity.Tasks), I found [Unity-Parse-Helpers][1] to be useful. However, it also has other Parse-related things that we don't need in Firebase and that prevent compilation without Parse. So, I created this repo to host only the task-related parts of [Unity-Parse-Helpers][1]. 
 
 Below are the related documentation from [Unity-Parse-Helpers][1]. 
 
