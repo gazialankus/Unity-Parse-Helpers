@@ -1,56 +1,13 @@
-Unity-Parse-Helpers
+Unity-Thenable-Tasks
 ===================
 
+This library is based on [Unity-Parse-Helpers][1]. 
+
+Since Firebase uses [Parse's Unity Tasks library](https://github.com/parse-community/Parse-SDK-dotNET/tree/master/Unity.Tasks), I found [Unity-Parse-Helpers][1] to be useful. However, it also has other Parse-related things that we don't need in Firebase and that prevent compilation without Parse, I created this repo to host only the task-related parts of [Unity-Parse-Helpers][1]. 
+
+Below are the related documentation from [Unity-Parse-Helpers][1]. 
+
 This library provides a number of helpers and utilities for dealing with Parse.com in Unity 3D
-
-Type-Safe Queries
------------------
-
-If you like using Parse.com in Unity but hate the fact you have to make non-type-safe calls such as:
-
-```
-new ParseQuery<Armor>().WhereLessThanOrEqualTo("cost", 13);
-```
-
-Then disappoint no more, using this library the above becomes:
-
-```
-new ParseQuery<Armor>().WhereLessThanOrEqualTo(a => a.Cost, 13);
-```
-
-The library can also handle chains such as
-
-```
-new ParseQuery<Player>().Include(p => p.Stats.Heath.Remaining); // becomes "stats.health.remaining"
-```
-
-The library also handles interfaces by introducing a new attribute "ParseFieldType".
-
-```
-[ParseClassName("Father")]
-public class Father : ParseObject, IFather
-{
-	[ParseFieldName("daughter")]
-	[ParseFieldType(typeof(Child))]
-	public IChild Daughter { get; set; }
-}
-
-new ParseQuery<Father>().Include(f => f.Daughter.Name); // becomes "daughter.name" and works because ParseFieldType redirects the chain to Child rather than IChild
-```
-
-It can even handle lists
-
-```
-[ParseClassName("Father")]
-public class Father : ParseObject, IFather
-{
-	[ParseFieldName("children")]
-	[ParseFieldType(typeof(Child))]
-	public List<IChild> Children { get; set; }
-}
-
-new ParseQuery<Father>().Include(f => f.Children[0].Name); // becomes "children.name"
-```
 
 Task Chaining
 --------------
@@ -88,3 +45,6 @@ Installation
 ------------
 
 Checkout this project as a sub-module in your project, and you should be good to go!
+
+
+[1]: https://github.com/mikecann/Unity-Parse-Helpers
