@@ -307,9 +307,11 @@ public static class TaskExtensions
         Action<Task<TResult>> a = t =>
         {
             if (t.IsCanceled || !t.IsFaulted || exceptionHandler == null) {
-                try { successHandler(t.Result); } catch (Exception e) {
-                    Debug.LogException(e);
-                    exceptionHandler(e);
+                if (successHandler != null) {
+                    try { successHandler(t.Result); } catch (Exception e) {
+                        Debug.LogException(e);
+                        exceptionHandler(e);
+                    }
                 }
             } else {
                 var innerException = t.Exception.Flatten().InnerExceptions.FirstOrDefault();
@@ -333,11 +335,13 @@ public static class TaskExtensions
         {
             if (t.IsCanceled || !t.IsFaulted || exceptionHandler == null)
             {
-                try { successHandler(); }
-                catch (Exception e)
-                {
-                    Debug.LogException(e);
-                    exceptionHandler(e);
+                if (successHandler != null) {
+                    try { successHandler(); }
+                    catch (Exception e)
+                    {
+                        Debug.LogException(e);
+                        exceptionHandler(e);
+                    }
                 }
             }
             else
